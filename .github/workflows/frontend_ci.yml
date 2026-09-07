@@ -1,8 +1,9 @@
-name: Frontend Continues Integration
+name: Frontend Continuous Integration
+
 on:
   pull_request:
     branches:
-    - main
+      - main
     paths:
       - 'starter/frontend/**'
   workflow_dispatch:
@@ -15,8 +16,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
-      - name: Setup NodeJs
+
+      - name: Setup NodeJS
         uses: actions/setup-node@v4
         with:
           node-version-file: starter/frontend/.nvmrc
@@ -30,29 +31,29 @@ jobs:
       - name: Run lint
         working-directory: starter/frontend
         run: npm run lint
-  
+
   test:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
-      - name: Setup NodeJs
-        uses: actions/setupt-node@v4
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v4
         with:
           node-version-file: starter/frontend/.nvmrc
           cache: npm
           cache-dependency-path: starter/frontend/package-lock.json
-        
-      - name: Install Dependencies
+
+      - name: Install dependencies
         working-directory: starter/frontend
         run: npm ci
 
       - name: Run tests
         working-directory: starter/frontend
-        run: CI=true npm test--watchAll=false
-  
+        run: CI=true npm test -- --watchAll=false
+
   build:
     needs:
       - lint
@@ -63,12 +64,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Build Docker Image
+      - name: Build Docker image
         working-directory: starter/frontend
         run: |
           docker build \
-            --build-arg
-            REACT_APP_MOVIE_API_URL = http://localhost:5000 \
-                                                      --tag 
-            mp-frontend:latest .
-   
+            --build-arg REACT_APP_MOVIE_API_URL=http://localhost:5000 \
+            --tag mp-frontend:latest .
